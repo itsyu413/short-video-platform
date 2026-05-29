@@ -123,21 +123,16 @@ export default function ContactPage() {
 
             <div className="grid grid-cols-7 gap-3">
               {calendarItems.map((item, index) => {
-                if (item === "") return <div key={index} />;
-
+                if (typeof item === "string") {
+                  return <div key={index} />;
+                }
+                
                 const isClosed = "status" in item;
 
                 return (
                   <div
                   key={index}
-                  onClick={() => {
-                    if (!isClosed) {
-                      setSelectedSlot(item);
-                      setBookingDone(false);
-                      setBookingName("");
-                      setBookingEmail("");
-                    }
-                  }}
+                  
                   className={`min-h-[135px] rounded-2xl p-3 text-left shadow-sm ${
                     isClosed
                       ? "bg-white/70 text-[#8892a6]"

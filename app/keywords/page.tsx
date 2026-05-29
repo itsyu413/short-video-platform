@@ -34,11 +34,13 @@ export default function KeywordsPage() {
   const [selected, setSelected] = useState<Keyword[]>([]);
   const [mode, setMode] = useState("AND");
   const [language, setLanguage] = useState<"zh" | "en" | "both">("en");
+
   function getWord(item: Keyword) {
     if (language === "zh") return item.zh;
     if (language === "both") return `${item.zh} / ${item.en}`;
     return item.en;
   }
+
   function toggle(item: Keyword) {
     const exists = selected.some((word) => word.en === item.en);
 
@@ -49,15 +51,9 @@ export default function KeywordsPage() {
     }
   }
 
-  function getWord(item: Keyword) {
-    if (language === "zh") return item.zh;
-    if (language === "both") return `${item.zh} / ${item.en}`;
-    return item.en;
-  }
-
   const query = selected
-  .map((item) => `("${getWord(item)}")`)
-  .join(` ${mode} `);
+    .map((item) => `("${getWord(item)}")`)
+    .join(` ${mode} `);
 
   function clearAll() {
     setSelected([]);
@@ -109,12 +105,8 @@ export default function KeywordsPage() {
 
       <section className="px-16 pt-40 pb-20">
         <div className="mb-12 rounded-[36px] bg-gradient-to-r from-[#1E2A4D] to-[#7B61FF] p-10 text-white shadow-xl">
-          <p className="mb-4 text-sm font-semibold tracking-[0.25em] text-cyan-200">
-            KEYWORD LAB
-          </p>
-
+          <p className="mb-4 text-sm font-semibold tracking-[0.25em] text-cyan-200">KEYWORD LAB</p>
           <h1 className="text-5xl font-bold mb-6">關鍵詞實驗室</h1>
-
           <p className="max-w-5xl leading-9 text-white/85">
             使用者可點選最多三個關鍵詞，並選擇中文、英文或中英並列，
             建立 Boolean 搜尋式，前往華藝線上圖書館或 Scopus 進行文獻查找。
@@ -123,9 +115,7 @@ export default function KeywordsPage() {
 
         {Object.entries(categories).map(([title, items]) => (
           <section key={title} className="mb-12">
-            <h2 className="text-3xl font-bold mb-6 border-l-4 border-[#7B61FF] pl-4">
-              {title}
-            </h2>
+            <h2 className="text-3xl font-bold mb-6 border-l-4 border-[#7B61FF] pl-4">{title}</h2>
 
             <div className="grid md:grid-cols-2 gap-6">
               {items.map((item) => {
@@ -142,14 +132,8 @@ export default function KeywordsPage() {
                     }`}
                   >
                     <h3 className="text-xl font-bold mb-2">{item.zh}</h3>
-
-                    <p className={isSelected ? "text-white/80" : "text-[#6C8EBF]"}>
-                      {item.en}
-                    </p>
-
-                    <p className={isSelected ? "mt-4 text-white/85" : "mt-4 text-[#556070]"}>
-                      {item.desc}
-                    </p>
+                    <p className={isSelected ? "text-white/80" : "text-[#6C8EBF]"}>{item.en}</p>
+                    <p className={isSelected ? "mt-4 text-white/85" : "mt-4 text-[#556070]"}>{item.desc}</p>
                   </div>
                 );
               })}
@@ -162,9 +146,15 @@ export default function KeywordsPage() {
             Boolean 搜尋組合
           </h2>
 
+          <div className="bg-[#eef2ff] border border-[#7B61FF]/20 rounded-2xl p-4 mb-6">
+            <p className="font-semibold text-[#7B61FF] mb-2">Boolean Logic 提示</p>
+            <p className="text-sm text-[#556070] leading-7">
+              AND 用於縮小搜尋範圍，OR 用於擴大搜尋範圍。建議於學術資料庫檢索時搭配括號與引號使用。
+            </p>
+          </div>
+
           <div className="mb-6">
             <p className="mb-3 font-semibold">搜尋語言</p>
-
             <div className="flex flex-wrap gap-3">
               {[
                 ["zh", "中文"],
@@ -175,9 +165,7 @@ export default function KeywordsPage() {
                   key={value}
                   onClick={() => setLanguage(value as "zh" | "en" | "both")}
                   className={`px-5 py-2 rounded-full font-semibold ${
-                    language === value
-                      ? "bg-[#7B61FF] text-white"
-                      : "bg-[#ecf2f8] text-[#1A2B49]"
+                    language === value ? "bg-[#7B61FF] text-white" : "bg-[#ecf2f8] text-[#1A2B49]"
                   }`}
                 >
                   {label}
@@ -188,7 +176,6 @@ export default function KeywordsPage() {
 
           <div className="mb-6">
             <p className="mb-3 font-semibold">搜尋邏輯</p>
-
             <div className="flex gap-3">
               <button
                 onClick={() => setMode("AND")}
@@ -217,10 +204,7 @@ export default function KeywordsPage() {
               <span className="text-[#556070]">尚未選擇關鍵詞</span>
             ) : (
               selected.map((item) => (
-                <span
-                  key={item.en}
-                  className="rounded-full bg-[#7B61FF]/10 px-4 py-2 text-[#7B61FF] font-semibold"
-                >
+                <span key={item.en} className="rounded-full bg-[#7B61FF]/10 px-4 py-2 text-[#7B61FF] font-semibold">
                   {getWord(item)}
                 </span>
               ))
@@ -228,13 +212,10 @@ export default function KeywordsPage() {
           </div>
 
           <div className="rounded-2xl bg-[#1E2A4D] p-6 text-white mb-6">
-          <p className="font-bold mb-2">
-  學術資料庫檢索式
-</p>
-
-<p className="text-sm text-white/70 mb-4">
-  已依據 Boolean Logic 自動產生學術檢索格式
-</p>
+            <p className="font-bold mb-2">學術資料庫檢索式</p>
+            <p className="text-sm text-white/70 mb-4">
+              已依據 Boolean Logic 自動產生學術檢索格式
+            </p>
 
             <div className="rounded-xl bg-white/10 p-4 font-mono break-words">
               {query || "請選擇關鍵字"}
@@ -245,15 +226,12 @@ export default function KeywordsPage() {
             <button onClick={clearAll} className="rounded-full bg-gray-200 px-5 py-3 font-semibold text-[#1A2B49]">
               清除全部
             </button>
-
             <button onClick={copyText} className="rounded-full bg-[#7B61FF] px-5 py-3 font-semibold text-white">
               複製搜尋式
             </button>
-
             <button onClick={openAiriti} className="rounded-full bg-[#1E2A4D] px-5 py-3 font-semibold text-white">
               前往華藝線上圖書館
             </button>
-
             <button onClick={openScopus} className="rounded-full bg-[#6C8EBF] px-5 py-3 font-semibold text-white">
               前往 Scopus
             </button>
