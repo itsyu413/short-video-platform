@@ -287,7 +287,17 @@ export default function TopicPage() {
               </table>
             </div>
           </div>
-
+          <div className="mt-8 rounded-2xl bg-[#f4f7fb] p-6 border-l-4 border-[#7B61FF]">
+  <h3 className="font-bold text-xl mb-4">參考資料</h3>
+  <ul className="space-y-3 text-[#556070] leading-7">
+    <li>
+      Wang, Z., Chen, X., & Li, Y. (2025). The impact of short-form video scrolling on event segmentation and memory. <i>npj Science of Learning, 10</i>(1), 378.
+    </li>
+  </ul>
+  <p className="mt-4 text-sm text-[#7B61FF] font-semibold">
+    關鍵字：事件分割、注意力碎片化、眼動追蹤
+  </p>
+</div>
           <div className="rounded-3xl bg-gradient-to-br from-white to-[#f1f5f9] p-8 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
             <h2 className="mb-5 border-l-4 border-[#7B61FF] pl-4 text-3xl font-bold">
               議題二：短影音成癮與心理健康問題
@@ -324,7 +334,18 @@ export default function TopicPage() {
               </p>
             </div>
           </div>
-
+          <div className="mt-8 rounded-2xl bg-[#f4f7fb] p-6 border-l-4 border-[#7B61FF]">
+  <h3 className="font-bold text-xl mb-4">參考資料</h3>
+  <ul className="space-y-3 text-[#556070] leading-7">
+    <li>張簡千郁、陳志道（2018）。青少年網路成癮。家庭醫學與基層醫療，33(12)，345-349。</li>
+    <li>張鈞凱（2011）。網路成癮及治療方式。諮商與輔導，（309），44-47。</li>
+    <li>吳佳儀、李明濱、廖士程（2016）。網路成癮的危險因子之研究。自殺防治網通訊，11(3)，7-9。</li>
+    <li>Jiang, T., Xie, T., Li, J., Zhao, J., & Ma, N. (2026). Inhibitory control deficits in problematic short-form video users: Evidence from drift diffusion model. <i>BMC Psychology, 14</i>(1), 44.</li>
+  </ul>
+  <p className="mt-4 text-sm text-[#7B61FF] font-semibold">
+    關鍵字：短影音成癮、社群媒體、心理健康、Sleep quality、Internet addiction、Attention
+  </p>
+</div>
           <div className="rounded-3xl bg-gradient-to-br from-white to-[#f1f5f9] p-8 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
             <h2 className="mb-5 border-l-4 border-[#7B61FF] pl-4 text-3xl font-bold">
               議題三：數位媒體對青少年認知與時間感的影響
@@ -363,6 +384,16 @@ export default function TopicPage() {
               </p>
             </div>
           </div>
+          <div className="mt-8 rounded-2xl bg-[#f4f7fb] p-6 border-l-4 border-[#7B61FF]">
+  <h3 className="font-bold text-xl mb-4">參考資料</h3>
+  <ul className="space-y-3 text-[#556070] leading-7">
+    <li>陳佳欣、郭郡羽（2025）。青少年數位裝置使用時間、媒體多工與認知功能及心理適應間的關聯性。教育科學研究期刊，70(1)，41-74。</li>
+    <li>褚志鵬、林珍如、陳國文（2008）。高中學生網路使用行為、成癮狀況及戒減自我效能之調查研究。健康管理學刊，6(1)，73-93。</li>
+  </ul>
+  <p className="mt-4 text-sm text-[#7B61FF] font-semibold">
+    關鍵字：青少年、媒體多工、認知功能、數位裝置使用時間
+  </p>
+</div>
         </section>
       </section>
     </main>

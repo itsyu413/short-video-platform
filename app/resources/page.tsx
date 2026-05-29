@@ -1,8 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 export default function ResourcesPage() {
+  const [author, setAuthor] = useState("");
+const [year, setYear] = useState("");
+const [title, setTitle] = useState("");
+const [journal, setJournal] = useState("");
+const [volume, setVolume] = useState("");
+const [pages, setPages] = useState("");
+
+const apaResult =
+  author && year && title && journal
+    ? `${author}（${year}）。${title}。${journal}${
+        volume ? `，${volume}` : ""
+      }${pages ? `，${pages}` : ""}。`
+    : "";
   const databases = [
     {
       name: "Airiti Library 華藝線上圖書館",
@@ -207,21 +221,97 @@ export default function ResourcesPage() {
 </section>
 
         <section className="bg-white rounded-3xl p-8 shadow-md mb-14">
-          <h2 className="text-3xl font-bold mb-6 border-l-4 border-[#7B61FF] pl-4">
-            APA 引用方式
-          </h2>
+  <h2 className="text-3xl font-bold mb-6 border-l-4 border-[#7B61FF] pl-4">
+    APA 引用方式
+  </h2>
 
-          <p className="text-[#556070] leading-8 mb-6">
-            本研究採用 APA 作為引用與參考文獻之撰寫格式。正文中引用資料時，
-            需標示作者與出版年份；報告最後則需完整列出作者、年份、標題、
-            期刊名稱或出版單位與網址等資訊。
-          </p>
+  <p className="text-[#556070] leading-8 mb-6">
+    本研究採用 APA 作為引用與參考文獻之撰寫格式。正文中引用資料時，
+    需標示作者與出版年份；報告最後則需完整列出作者、年份、標題、
+    期刊名稱或出版單位與網址等資訊。
+  </p>
 
-          <div className="bg-[#1E2A4D] text-white rounded-2xl p-6 leading-8">
-            正確引用能清楚標示資料來源、尊重原作者研究成果，也有助於讀者查詢與驗證資料正確性，
-            提升研究專業性與可信度，避免抄襲。
-          </div>
-        </section>
+  <div className="bg-[#1E2A4D] text-white rounded-2xl p-6 leading-8 mb-8">
+    正確引用能清楚標示資料來源、尊重原作者研究成果，也有助於讀者查詢與驗證資料正確性，
+    提升研究專業性與可信度，避免抄襲。
+  </div>
+
+  <div className="bg-[#f4f7fb] rounded-3xl p-6">
+    <h3 className="text-2xl font-bold mb-6 text-[#1A2B49]">
+      APA 格式轉換工具
+    </h3>
+
+    <p className="text-[#556070] mb-6">
+      輸入文獻資訊後，系統將自動產生 APA 格式參考文獻。
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4 mb-6">
+      <input
+        value={author}
+        onChange={(e) => setAuthor(e.target.value)}
+        placeholder="作者"
+        className="border border-gray-300 rounded-xl p-3"
+      />
+
+      <input
+        value={year}
+        onChange={(e) => setYear(e.target.value)}
+        placeholder="出版年份"
+        className="border border-gray-300 rounded-xl p-3"
+      />
+
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="文章標題"
+        className="border border-gray-300 rounded-xl p-3"
+      />
+
+      <input
+        value={journal}
+        onChange={(e) => setJournal(e.target.value)}
+        placeholder="期刊名稱"
+        className="border border-gray-300 rounded-xl p-3"
+      />
+
+      <input
+        value={volume}
+        onChange={(e) => setVolume(e.target.value)}
+        placeholder="卷期（選填）"
+        className="border border-gray-300 rounded-xl p-3"
+      />
+
+      <input
+        value={pages}
+        onChange={(e) => setPages(e.target.value)}
+        placeholder="頁碼（選填）"
+        className="border border-gray-300 rounded-xl p-3"
+      />
+    </div>
+
+    <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-5">
+      <p className="font-bold mb-3 text-[#1A2B49]">
+        APA 轉換結果
+      </p>
+
+      <div className="text-[#556070] break-words">
+        {apaResult || "請輸入文獻資料"}
+      </div>
+    </div>
+
+    <button
+      onClick={() => {
+        if (!apaResult) return;
+
+        navigator.clipboard.writeText(apaResult);
+        alert("APA 格式已複製！");
+      }}
+      className="bg-[#7B61FF] text-white px-6 py-3 rounded-full font-bold hover:scale-105 transition"
+    >
+      一鍵複製 APA
+    </button>
+  </div>
+</section>
 
         <section className="bg-white rounded-3xl p-8 shadow-md text-center">
           <h2 className="text-2xl font-bold mb-4">不知道該用什麼關鍵詞？</h2>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   Brain,
   Smartphone,
@@ -9,6 +10,68 @@ import {
 } from "lucide-react";
 
 export default function Home() {
+  const searchPages = [
+    { keyword: "主題", path: "/topic" },
+    { keyword: "選題", path: "/topic" },
+    { keyword: "研究流程", path: "/process" },
+    { keyword: "流程", path: "/process" },
+    { keyword: "文獻", path: "/resources" },
+    { keyword: "資料庫", path: "/resources" },
+    { keyword: "關鍵詞", path: "/keywords" },
+    { keyword: "關鍵字", path: "/keywords" },
+    { keyword: "工具", path: "/tools" },
+    { keyword: "倒數", path: "/tools#countdown" },
+    { keyword: "FAQ", path: "/faq" },
+    { keyword: "關於", path: "/about" },
+    { keyword: "聯絡", path: "/contact" },
+  ];
+  
+  function handleSearch(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key !== "Enter") return;
+  
+    const value = e.currentTarget.value.trim().toLowerCase();
+    if (!value) return;
+  
+    const match = searchPages.find((item) =>
+      item.keyword.toLowerCase().includes(value) ||
+      value.includes(item.keyword.toLowerCase())
+    );
+  
+    if (match) {
+      window.location.href = match.path;
+    } else {
+      alert("找不到相關頁面，請試試：主題、文獻、關鍵詞、工具、倒數");
+    }
+  }
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+  });
+
+  useEffect(() => {
+    const updateCountdown = () => {
+      const savedDeadline = localStorage.getItem("researchDeadline");
+
+      if (!savedDeadline) return;
+
+      const target = new Date(savedDeadline).getTime();
+      const now = new Date().getTime();
+      const distance = target - now;
+
+      setTimeLeft({
+        days: Math.max(Math.floor(distance / (1000 * 60 * 60 * 24)), 0),
+        hours: Math.max(Math.floor((distance / (1000 * 60 * 60)) % 24), 0),
+        minutes: Math.max(Math.floor((distance / (1000 * 60)) % 60), 0),
+      });
+    };
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   const features = [
     { title: "主題專區", text: "整理短影音對注意力、心理健康與時間知覺的研究議題。", link: "/topic" },
     { title: "研究流程", text: "以七步驟引導完成科展與小論文。", link: "/process" },
@@ -24,7 +87,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#ecf2f8] text-[#1A2B49]">
-
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#08111f]/75 backdrop-blur-xl border-b border-white/10 px-16 py-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-4">
@@ -49,15 +111,15 @@ export default function Home() {
             </nav>
 
             <input
-              placeholder="搜尋..."
-              className="w-28 bg-white/90 border border-white/30 text-black rounded-full px-4 py-2 text-sm outline-none"
-            />
+  placeholder="搜尋..."
+  onKeyDown={handleSearch}
+  className="w-28 bg-white/90 border border-white/30 text-black rounded-full px-4 py-2 text-sm outline-none focus:w-44 transition-all"
+/>
           </div>
         </div>
       </header>
 
-      {/* Hero */}
-     <section className="relative w-full pt-52 pb-44 overflow-hidden text-white">
+      <section className="relative w-full pt-52 pb-44 overflow-hidden text-white">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "url('/hero.jpg')" }}
@@ -88,36 +150,16 @@ export default function Home() {
         </div>
       </section>
 
-     {/* 中間快速導覽 */}
-<section className="px-16 py-6 border-b border-gray-200 bg-[#ecf2f8]">
+      <section className="px-16 py-6 border-b border-gray-200 bg-[#ecf2f8]">
+        <div className="flex flex-wrap gap-6 text-[#1A2B49] text-sm font-medium">
+          <a href="#guide" className="text-[#7B61FF] font-semibold">快速選題指南</a>
+          <a href="#features" className="hover:text-[#7B61FF] transition">平台功能導覽</a>
+          <a href="#themes" className="hover:text-[#7B61FF] transition">三大探究議題</a>
+          <a href="#countdown" className="hover:text-[#7B61FF] transition">科展 / 小論文倒數</a>
+          
+        </div>
+      </section>
 
-  <div className="flex flex-wrap gap-6 text-[#1A2B49] text-sm font-medium">
-
-    <a href="#guide" className="text-[#7B61FF] font-semibold">
-      快速選題指南
-    </a>
-
-    <a href="#features" className="hover:text-[#7B61FF] transition">
-      平台功能導覽
-    </a>
-
-    <a href="#themes" className="hover:text-[#7B61FF] transition">
-      三大探究議題
-    </a>
-
-    <a href="#countdown" className="hover:text-[#7B61FF] transition">
-      科展 / 小論文倒數
-    </a>
-
-    <a href="#tags" className="hover:text-[#7B61FF] transition">
-      熱門研究標籤
-    </a>
-
-  </div>
-
-</section>
-
-      {/* 快速選題指南 */}
       <section id="guide" className="px-16 py-20 bg-[#ecf2f8]">
         <h2 className="text-4xl font-bold mb-10">快速選題指南</h2>
 
@@ -148,7 +190,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 平台功能 */}
       <section id="features" className="px-16 py-20 bg-[#ecf2f8]">
         <h2 className="text-4xl font-bold mb-10">平台功能導覽</h2>
 
@@ -157,7 +198,7 @@ export default function Home() {
             <Link
               key={item.title}
               href={item.link}
-              className="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition hover:-translate-y-1 transition"
+              className="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg hover:-translate-y-1 transition"
             >
               <h3 className="font-bold mb-2">{item.title}</h3>
               <p className="text-[#556070]">{item.text}</p>
@@ -166,13 +207,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 三大議題 */}
       <section id="themes" className="px-16 py-20 bg-[#ecf2f8]">
         <h2 className="text-4xl font-bold mb-10">三大探究議題</h2>
 
         <div className="grid lg:grid-cols-3 gap-6">
           {themes.map((item) => (
-            <div key={item.title} className="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition hover:-translate-y-1 transition">
+            <div key={item.title} className="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg hover:-translate-y-1 transition">
               <div className="mb-4 text-[#7B61FF]">{item.icon}</div>
               <h3 className="font-bold text-xl mb-3">{item.title}</h3>
               <p className="text-[#556070] leading-7">{item.text}</p>
@@ -181,7 +221,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 倒數器 */}
       <section id="countdown" className="px-16 py-20 bg-[#ecf2f8]">
         <h2 className="text-4xl font-bold mb-12">科展 / 小論文倒數</h2>
 
@@ -195,10 +234,10 @@ export default function Home() {
             </p>
 
             <Link
-              href="/countdown"
+              href="/tools#countdown"
               className="inline-block mt-8 bg-white text-[#1E2A4D] px-8 py-4 rounded-full font-bold"
             >
-              開啟倒數器
+              前往工具區設定日期
             </Link>
           </div>
 
@@ -207,91 +246,103 @@ export default function Home() {
 
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-white/20 rounded-2xl p-5">
-                <p className="text-5xl font-black">42</p>
+                <p className="text-5xl font-black">{timeLeft.days}</p>
                 <p>天</p>
               </div>
               <div className="bg-white/20 rounded-2xl p-5">
-                <p className="text-5xl font-black">08</p>
+                <p className="text-5xl font-black">{String(timeLeft.hours).padStart(2, "0")}</p>
                 <p>時</p>
               </div>
               <div className="bg-white/20 rounded-2xl p-5">
-                <p className="text-5xl font-black">30</p>
+                <p className="text-5xl font-black">{String(timeLeft.minutes).padStart(2, "0")}</p>
                 <p>分</p>
               </div>
             </div>
+
+            <p className="mt-5 text-sm text-white/60">
+              日期可於工具區倒數器設定，首頁會自動同步。
+            </p>
           </div>
         </div>
       </section>
 
-      {/* 熱門標籤 */}
-      <section id="tags" className="px-16 py-20 bg-[#ecf2f8]">
-        <h2 className="text-4xl font-bold mb-10">熱門研究標籤</h2>
+      
 
-        <div className="flex flex-wrap gap-4">
-          {["#短影音", "#注意力碎片化", "#時間知覺", "#演算法推播", "#FOMO", "#心理健康"].map((tag) => (
-            <Link
-              href="/keywords"
-              key={tag}
-              className="bg-white px-6 py-3 rounded-full shadow-md hover:shadow-lg transition hover:scale-105 transition"
-            >
-              {tag}
+      <footer className="bg-[#050816] text-white px-16 py-10">
+  <div className="max-w-6xl mx-auto">
+
+    <div className="flex flex-col lg:flex-row justify-between gap-12">
+
+      {/* 左側品牌介紹 */}
+      <div className="max-w-md">
+        <img
+          src="/logo.png"
+          alt="logo"
+          className="w-28 h-auto object-contain mb-4"
+        />
+
+        <h2 className="text-2xl font-bold">
+          數位人文探究
+        </h2>
+
+        <p className="text-slate-300 mt-2">
+          短影片與注意力研究導航中心
+        </p>
+
+        <p className="text-slate-400 mt-4 leading-7">
+          引導影音研究方向，將媒體使用行為轉化為知覺依據。
+        </p>
+      </div>
+
+      {/* 右側兩欄 */}
+      <div className="flex gap-16 lg:gap-24">
+
+        <div>
+          <h3 className="font-bold text-lg mb-3">
+            平台產品
+          </h3>
+
+          <div className="flex flex-col gap-2 text-slate-300">
+            <Link href="/topic">主題專區</Link>
+            <Link href="/process">研究流程</Link>
+            <Link href="/resources">文獻資源</Link>
+            <Link href="/keywords">關鍵詞實驗室</Link>
+            <Link href="/tools">工具區</Link>
+            <Link href="/faq">FAQ</Link>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="font-bold text-lg mb-3">
+            聯絡資訊
+          </h3>
+
+          <p className="text-slate-300">
+            電話：02 2621 5656
+          </p>
+
+          <p className="text-slate-300 mt-2 leading-7">
+            地址：251新北市淡水區中興里英專路151號
+          </p>
+
+          <div className="mt-4 flex flex-col gap-2 text-slate-300">
+            <Link href="/about">關於我們</Link>
+            <Link href="/contact">
+              參考諮詢團隊 / 聯絡方式
             </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-[#050816] text-white px-16 py-16">
-        <div className="grid lg:grid-cols-3 gap-12">
-          <div>
-            <img src="/logo.png" alt="logo" className="w-28 h-auto object-contain mb-6" />
-
-            <h2 className="text-2xl font-bold">
-              數位人文探究
-            </h2>
-
-            <p className="text-slate-300 mt-2">
-              短影片與注意力研究導航中心
-            </p>
-
-            <p className="text-slate-400 mt-6 leading-8">
-              引導影音研究方向，將媒體使用行為轉化為知覺依據。
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-bold text-lg mb-5">平台產品</h3>
-
-            <div className="flex flex-col gap-3 text-slate-300">
-              <Link href="/topic">主題專區</Link>
-              <Link href="/process">研究流程</Link>
-              <Link href="/resources">文獻資源</Link>
-              <Link href="/keywords">關鍵詞實驗室</Link>
-              <Link href="/tools">工具區</Link>
-              <Link href="/faq">FAQ</Link>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="font-bold text-lg mb-5">聯絡資訊</h3>
-
-            <p className="text-slate-300">電話：02 2621 5656</p>
-
-            <p className="text-slate-300 mt-3 leading-8">
-              地址：251新北市淡水區中興里英專路151號
-            </p>
-
-            <div className="mt-6 flex flex-col gap-3 text-slate-300">
-              <Link href="/about">關於我們</Link>
-              <Link href="/contact">參考諮詢團隊 / 聯絡方式</Link>
-            </div>
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-12 pt-6 text-slate-500 text-sm">
-          © 2026 Digital Humanities Research Navigation Platform
-        </div>
-      </footer>
+      </div>
+
+    </div>
+
+    <div className="border-t border-white/10 mt-8 pt-5 text-slate-500 text-sm">
+      © 2026 Digital Humanities Research Navigation Platform
+    </div>
+
+  </div>
+</footer>
     </main>
   );
 }

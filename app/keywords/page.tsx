@@ -3,7 +3,13 @@
 import Link from "next/link";
 import { useState } from "react";
 
-const categories = {
+type Keyword = {
+  zh: string;
+  en: string;
+  desc: string;
+};
+
+const categories: Record<string, Keyword[]> = {
   主題核心: [
     { zh: "短影音 / 短影片", en: "Short-form Video", desc: "研究的核心媒介，指 60 秒以內的直式影音內容。" },
     { zh: "演算法推播", en: "Algorithmic Recommendation", desc: "探討平台如何透過自動化篩選，將特定內容精準投遞給使用者。" },
@@ -25,18 +31,33 @@ const categories = {
 };
 
 export default function KeywordsPage() {
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<Keyword[]>([]);
   const [mode, setMode] = useState("AND");
+  const [language, setLanguage] = useState<"zh" | "en" | "both">("en");
+  function getWord(item: Keyword) {
+    if (language === "zh") return item.zh;
+    if (language === "both") return `${item.zh} / ${item.en}`;
+    return item.en;
+  }
+  function toggle(item: Keyword) {
+    const exists = selected.some((word) => word.en === item.en);
 
-  function toggle(word: string) {
-    if (selected.includes(word)) {
-      setSelected(selected.filter((w) => w !== word));
+    if (exists) {
+      setSelected(selected.filter((word) => word.en !== item.en));
     } else if (selected.length < 3) {
-      setSelected([...selected, word]);
+      setSelected([...selected, item]);
     }
   }
 
-  const query = selected.join(` ${mode} `);
+  function getWord(item: Keyword) {
+    if (language === "zh") return item.zh;
+    if (language === "both") return `${item.zh} / ${item.en}`;
+    return item.en;
+  }
+
+  const query = selected
+  .map((item) => `("${getWord(item)}")`)
+  .join(` ${mode} `);
 
   function clearAll() {
     setSelected([]);
@@ -49,11 +70,7 @@ export default function KeywordsPage() {
   }
 
   function openAiriti() {
-    if (!query) return;
-    window.open(
-      `https://www.airitilibrary.com/Home/Index`,
-      "_blank"
-    );
+    window.open("https://www.airitilibrary.com/Home/Index", "_blank");
   }
 
   function openScopus() {
@@ -81,9 +98,7 @@ export default function KeywordsPage() {
             <Link href="/topic">主題專區</Link>
             <Link href="/process">研究流程</Link>
             <Link href="/resources">文獻資源</Link>
-            <Link href="/keywords" className="text-[#7B61FF] font-semibold">
-              關鍵詞實驗室
-            </Link>
+            <Link href="/keywords" className="text-[#7B61FF] font-semibold">關鍵詞實驗室</Link>
             <Link href="/tools">工具區</Link>
             <Link href="/faq">FAQ</Link>
             <Link href="/about">關於我們</Link>
@@ -98,14 +113,11 @@ export default function KeywordsPage() {
             KEYWORD LAB
           </p>
 
-          <h1 className="text-5xl font-bold mb-6">
-            關鍵詞實驗室
-          </h1>
+          <h1 className="text-5xl font-bold mb-6">關鍵詞實驗室</h1>
 
           <p className="max-w-5xl leading-9 text-white/85">
-            本平台依研究主題與資料檢索需求，將關鍵詞彙分為「主題核心」、
-            「認知與心理」、「媒體行為」三大類，並提供中英文對照與簡要說明。
-            使用者可點選最多三個關鍵詞，建立 Boolean 搜尋式，前往華藝線上圖書館或 Scopus 進行文獻查找。
+            使用者可點選最多三個關鍵詞，並選擇中文、英文或中英並列，
+            建立 Boolean 搜尋式，前往華藝線上圖書館或 Scopus 進行文獻查找。
           </p>
         </div>
 
@@ -116,27 +128,31 @@ export default function KeywordsPage() {
             </h2>
 
             <div className="grid md:grid-cols-2 gap-6">
-              {items.map((item) => (
-                <div
-                  key={item.en}
-                  onClick={() => toggle(item.en)}
-                  className={`cursor-pointer rounded-2xl p-6 shadow-md transition hover:-translate-y-1 hover:shadow-lg ${
-                    selected.includes(item.en)
-                      ? "bg-gradient-to-br from-[#1E2A4D] to-[#7B61FF] text-white"
-                      : "bg-white"
-                  }`}
-                >
-                  <h3 className="text-xl font-bold mb-2">{item.zh}</h3>
+              {items.map((item) => {
+                const isSelected = selected.some((word) => word.en === item.en);
 
-                  <p className={selected.includes(item.en) ? "text-white/80" : "text-[#6C8EBF]"}>
-                    {item.en}
-                  </p>
+                return (
+                  <div
+                    key={item.en}
+                    onClick={() => toggle(item)}
+                    className={`cursor-pointer rounded-2xl p-6 shadow-md transition hover:-translate-y-1 hover:shadow-lg ${
+                      isSelected
+                        ? "bg-gradient-to-br from-[#1E2A4D] to-[#7B61FF] text-white"
+                        : "bg-white"
+                    }`}
+                  >
+                    <h3 className="text-xl font-bold mb-2">{item.zh}</h3>
 
-                  <p className={selected.includes(item.en) ? "mt-4 text-white/85" : "mt-4 text-[#556070]"}>
-                    {item.desc}
-                  </p>
-                </div>
-              ))}
+                    <p className={isSelected ? "text-white/80" : "text-[#6C8EBF]"}>
+                      {item.en}
+                    </p>
+
+                    <p className={isSelected ? "mt-4 text-white/85" : "mt-4 text-[#556070]"}>
+                      {item.desc}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </section>
         ))}
@@ -147,15 +163,37 @@ export default function KeywordsPage() {
           </h2>
 
           <div className="mb-6">
+            <p className="mb-3 font-semibold">搜尋語言</p>
+
+            <div className="flex flex-wrap gap-3">
+              {[
+                ["zh", "中文"],
+                ["en", "英文"],
+                ["both", "中英並列"],
+              ].map(([value, label]) => (
+                <button
+                  key={value}
+                  onClick={() => setLanguage(value as "zh" | "en" | "both")}
+                  className={`px-5 py-2 rounded-full font-semibold ${
+                    language === value
+                      ? "bg-[#7B61FF] text-white"
+                      : "bg-[#ecf2f8] text-[#1A2B49]"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
             <p className="mb-3 font-semibold">搜尋邏輯</p>
 
             <div className="flex gap-3">
               <button
                 onClick={() => setMode("AND")}
                 className={`px-5 py-2 rounded-full font-semibold ${
-                  mode === "AND"
-                    ? "bg-[#7B61FF] text-white"
-                    : "bg-[#ecf2f8] text-[#1A2B49]"
+                  mode === "AND" ? "bg-[#7B61FF] text-white" : "bg-[#ecf2f8] text-[#1A2B49]"
                 }`}
               >
                 AND 精準查找
@@ -164,9 +202,7 @@ export default function KeywordsPage() {
               <button
                 onClick={() => setMode("OR")}
                 className={`px-5 py-2 rounded-full font-semibold ${
-                  mode === "OR"
-                    ? "bg-[#7B61FF] text-white"
-                    : "bg-[#ecf2f8] text-[#1A2B49]"
+                  mode === "OR" ? "bg-[#7B61FF] text-white" : "bg-[#ecf2f8] text-[#1A2B49]"
                 }`}
               >
                 OR 擴大搜尋
@@ -174,27 +210,31 @@ export default function KeywordsPage() {
             </div>
           </div>
 
-          <p className="mb-4 text-[#556070]">
-            已選關鍵詞：
-          </p>
+          <p className="mb-4 text-[#556070]">已選關鍵詞：</p>
 
           <div className="flex flex-wrap gap-3 min-h-12 mb-8">
             {selected.length === 0 ? (
               <span className="text-[#556070]">尚未選擇關鍵詞</span>
             ) : (
-              selected.map((s) => (
+              selected.map((item) => (
                 <span
-                  key={s}
+                  key={item.en}
                   className="rounded-full bg-[#7B61FF]/10 px-4 py-2 text-[#7B61FF] font-semibold"
                 >
-                  {s}
+                  {getWord(item)}
                 </span>
               ))
             )}
           </div>
 
           <div className="rounded-2xl bg-[#1E2A4D] p-6 text-white mb-6">
-            <p className="font-bold mb-3">建議搜尋式</p>
+          <p className="font-bold mb-2">
+  學術資料庫檢索式
+</p>
+
+<p className="text-sm text-white/70 mb-4">
+  已依據 Boolean Logic 自動產生學術檢索格式
+</p>
 
             <div className="rounded-xl bg-white/10 p-4 font-mono break-words">
               {query || "請選擇關鍵字"}
@@ -202,31 +242,19 @@ export default function KeywordsPage() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <button
-              onClick={clearAll}
-              className="rounded-full bg-gray-200 px-5 py-3 font-semibold text-[#1A2B49]"
-            >
+            <button onClick={clearAll} className="rounded-full bg-gray-200 px-5 py-3 font-semibold text-[#1A2B49]">
               清除全部
             </button>
 
-            <button
-              onClick={copyText}
-              className="rounded-full bg-[#7B61FF] px-5 py-3 font-semibold text-white"
-            >
+            <button onClick={copyText} className="rounded-full bg-[#7B61FF] px-5 py-3 font-semibold text-white">
               複製搜尋式
             </button>
 
-            <button
-              onClick={openAiriti}
-              className="rounded-full bg-[#1E2A4D] px-5 py-3 font-semibold text-white"
-            >
+            <button onClick={openAiriti} className="rounded-full bg-[#1E2A4D] px-5 py-3 font-semibold text-white">
               前往華藝線上圖書館
             </button>
 
-            <button
-              onClick={openScopus}
-              className="rounded-full bg-[#6C8EBF] px-5 py-3 font-semibold text-white"
-            >
+            <button onClick={openScopus} className="rounded-full bg-[#6C8EBF] px-5 py-3 font-semibold text-white">
               前往 Scopus
             </button>
           </div>

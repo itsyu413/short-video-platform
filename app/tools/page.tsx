@@ -19,9 +19,9 @@ const [booked, setBooked] = useState(false);
     digital: {
       name: "數位霓虹",
       primary: "#7B61FF",
-      secondary: "#00F5FF",
+      secondary: "#4dd2ff",
       posterBg: "#050816",
-      layerBg: "rgba(255,255,255,0.12)",
+      layerBg: "#004080",
       text: "#FFFFFF",
     },
     academic: {
@@ -110,7 +110,7 @@ const [booked, setBooked] = useState(false);
             <Link href="/tools" className="text-[#7B61FF] font-semibold">工具區</Link>
             <Link href="/faq">FAQ</Link>
             <Link href="/about">關於我們</Link>
-            <Link href="/contact">聯絡諮詢團隊</Link>
+            <Link href="/contact">參考諮詢團隊</Link>
           </nav>
         </div>
       </header>
@@ -122,21 +122,24 @@ const [booked, setBooked] = useState(false);
           </p>
           <h1 className="text-5xl font-bold mb-6">工具區</h1>
           <p className="max-w-5xl leading-9 text-white/85">
-            本區提供研究過程中可使用的互動工具，協助學生進行時間管理、諮詢安排、資料蒐集與成果呈現。
+            本區提供研究過程中可使用的互動工具，協助學生進行時間管理、資料蒐、統計分析與成果呈現。
           </p>
         </div>
-
-        <section className="bg-white rounded-3xl p-8 shadow-md mb-14">
+        <section id="countdown" className="bg-white rounded-3xl p-8 shadow-md mb-14">
+        
           <h2 className="text-3xl font-bold mb-6 border-l-4 border-[#7B61FF] pl-4">
             全國中學生科展／小論文倒數器
           </h2>
 
           <input
-            type="datetime-local"
-            value={deadline}
-            onChange={(e) => setDeadline(e.target.value)}
-            className="w-full max-w-md border border-gray-300 rounded-xl px-4 py-3 mb-8"
-          />
+  type="datetime-local"
+  value={deadline}
+  onChange={(e) => {
+    setDeadline(e.target.value);
+    localStorage.setItem("researchDeadline", e.target.value);
+  }}
+  className="w-full max-w-md border border-gray-300 rounded-xl px-4 py-3 mb-8"
+/>
 
           <div className="grid md:grid-cols-4 gap-6">
             {[
@@ -153,77 +156,6 @@ const [booked, setBooked] = useState(false);
           </div>
         </section>
 
-        {/* 館員諮詢服務時間表 */}
-<section className="bg-white rounded-3xl p-8 shadow-md mb-14">
-  <h2 className="text-3xl font-bold mb-6 border-l-4 border-[#7B61FF] pl-4">
-    館員諮詢服務時間表
-  </h2>
-
-  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-    {[
-      ["週一 10:00", "文獻檢索"],
-      ["週二 14:00", "APA 格式"],
-      ["週三 15:30", "問卷設計"],
-      ["週四 11:00", "研究方法"],
-      ["週五 13:00", "資料分析"],
-    ].map(([time, skill]) => (
-      <button
-        key={time}
-        onClick={() => {
-          setSelectedSlot(`${time}｜${skill}`);
-          setBooked(false);
-          setName("");
-        }}
-        className="bg-[#f4f7fb] rounded-2xl p-5 text-left shadow-sm hover:bg-[#1E2A4D] hover:text-white transition"
-      >
-        <p className="font-bold">{time}</p>
-        <p className="text-sm mt-2">專長：{skill}</p>
-      </button>
-    ))}
-  </div>
-
-  {/* 預約區 */}
-  {selectedSlot && (
-    <div className="mt-10 bg-[#f8fafc] border border-[#e2e8f0] rounded-2xl p-6">
-
-      <p className="font-bold mb-6 text-lg">
-        已選擇時段：{selectedSlot}
-      </p>
-
-      {!booked ? (
-        <div className="flex flex-col gap-5">
-
-          <input
-            type="text"
-            placeholder="請輸入姓名"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full max-w-sm border border-gray-300 rounded-xl px-4 py-3"
-          />
-
-          <button
-            onClick={() => {
-              if (!name) {
-                alert("請輸入姓名");
-                return;
-              }
-              setBooked(true);
-            }}
-            className="bg-[#7B61FF] text-white px-6 py-3 rounded-full font-bold w-fit"
-          >
-            確認預約
-          </button>
-
-        </div>
-      ) : (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-5 py-4 rounded-xl">
-          預約成功！{name} 已預約 {selectedSlot}
-        </div>
-      )}
-
-    </div>
-  )}
-</section>
         <section className="bg-white rounded-3xl p-8 shadow-md mb-14">
           <h2 className="text-3xl font-bold mb-6 border-l-4 border-[#7B61FF] pl-4">
             科展海報設計工具
