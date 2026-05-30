@@ -400,7 +400,7 @@ const [booked, setBooked] = useState(false);
 
       <div className="mt-5 bg-[#eef2ff] border-l-4 border-[#7B61FF] p-4 rounded-xl">
         <p className="text-sm text-[#1A2B49] font-medium">
-          建議：每份問卷至少收集 20 份以上樣本，資料會比較有分析價值。
+          建議：每份問卷至少收集 30 份以上樣本，資料會比較有分析價值。
         </p>
       </div>
     </div>
