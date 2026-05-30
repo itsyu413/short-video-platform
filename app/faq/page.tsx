@@ -46,8 +46,36 @@ export default function FAQPage() {
         },
         {
           q: "問卷調查需要多少份樣本？",
-          a: "一般建議至少蒐集30份以上有效問卷；若需進行統計分析或不同群體比較，建議蒐集50至100份以上樣本。",
-        },
+          a: (
+            <>
+              <p>
+                一般而言，小型研究或前導性研究建議至少蒐集30份以上有效樣本，以利進行基本統計分析。若研究條件允許，建議蒐集100份以上樣本，以提升研究結果的代表性與可信度。
+              </p>
+        
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <p className="text-xs font-semibold text-[#7B61FF] mb-2">
+                  參考文獻
+                </p>
+        
+                <ul className="text-xs text-[#8892A6] leading-6 space-y-2">
+                  <li>
+                    吳明隆、涂金堂（2011）。《SPSS與統計應用分析》。臺北市：五南圖書出版股份有限公司。
+                  </li>
+        
+                  <li>
+                    林生傳（2003）。《教育研究法：全方位的統整與分析》。臺北市：心理出版社。
+                  </li>
+        
+                  <li>
+                    Gay, L. R., Mills, G. E., & Airasian, P. (2012).
+                    <i> Educational Research: Competencies for Analysis and Applications </i>
+                    (10th ed.). Pearson Education.
+                  </li>
+                </ul>
+              </div>
+            </>
+          ),
+        }
       ],
     },
 
