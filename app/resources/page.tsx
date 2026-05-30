@@ -9,13 +9,20 @@ const [year, setYear] = useState("");
 const [title, setTitle] = useState("");
 const [journal, setJournal] = useState("");
 const [volume, setVolume] = useState("");
+const [issue, setIssue] = useState("");
 const [pages, setPages] = useState("");
-
+const [doi, setDoi] = useState("");
 const apaResult =
   author && year && title && journal
     ? `${author}（${year}）。${title}。${journal}${
-        volume ? `，${volume}` : ""
-      }${pages ? `，${pages}` : ""}。`
+        volume
+          ? issue
+            ? `，${volume}(${issue})`
+            : `，${volume}`
+          : ""
+      }${pages ? `，${pages}` : ""}。${
+        doi ? ` ${doi}` : ""
+      }`
     : "";
   const databases = [
     {
@@ -274,19 +281,34 @@ const apaResult =
         className="border border-gray-300 rounded-xl p-3"
       />
 
-      <input
-        value={volume}
-        onChange={(e) => setVolume(e.target.value)}
-        placeholder="卷期（選填）"
-        className="border border-gray-300 rounded-xl p-3"
-      />
+<div className="grid md:grid-cols-2 gap-4">
+  <input
+    value={volume}
+    onChange={(e) => setVolume(e.target.value)}
+    placeholder="卷號（例如：12）"
+    className="border border-gray-300 rounded-xl p-3"
+  />
+
+  <input
+    value={issue}
+    onChange={(e) => setIssue(e.target.value)}
+    placeholder="期號（例如：3）"
+    className="border border-gray-300 rounded-xl p-3"
+  />
+</div>
 
       <input
         value={pages}
         onChange={(e) => setPages(e.target.value)}
-        placeholder="頁碼（選填）"
+        placeholder="頁碼"
         className="border border-gray-300 rounded-xl p-3"
       />
+      <input
+  value={doi}
+  onChange={(e) => setDoi(e.target.value)}
+  placeholder="DOI 或 URL（例如：https://doi.org/10.xxxx）"
+  className="border border-gray-300 rounded-xl p-3"
+/>
     </div>
 
     <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-5">
